@@ -3,7 +3,30 @@ import React, { useState, useEffect } from 'react';
 // cleanup function
 // second parameter
 const UseEffectBasics = () => {
-  return <h2>useEffect Basics</h2>;
+
+  const [value, setValue] = useState(0)
+
+  // if(value >= 0){
+    useEffect(()=>{
+      console.log('call useEffect')
+      if(value >= 1){
+        document.title = `New Messages(${value})`
+      }
+    },     [value])
+  // }
+
+
+  console.log('render compoment')
+
+  const changeTitle = () =>{
+    setValue((prevState) => setValue(prevState + 1))
+  }
+
+
+  return (<>
+  <h1>{value}</h1>
+    <button className='btn' onClick={changeTitle}>Change Title</button>
+  </>)
 };
 
 export default UseEffectBasics;
