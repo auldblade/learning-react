@@ -4,12 +4,34 @@ import { data } from "../../../data";
 // reducer function
 
 const reducer = (state, action) => {
-  console.log(state);
+  if (action.type === "ADD_ITEM") {
+    const newPeople = [...state.people, action.payload];
+    return {
+      ...state,
+      people: newPeople,
+      isModalOpen: true,
+      modalContent: "Item Added",
+    };
+  }
+  if (action.type === "REMOVE_ITEM") {
+    const newPeople = state.people.filter(
+      (person) => person.id !== action.payload
+    );
+    return { ...state, people: newPeople };
+  }
+  if (action.type === "NO_VALUE") {
+    return { ...state, isModalOpen: true, modalContent: "Please enter value" };
+  }
+  if (action.type === "CLOSE_MODAL") {
+    return { ...state, isModalOpen: false };
+  }
+
+  throw new Error("No Matching Action Type");
 };
 const defaultState = {
   people: [],
   isModalOpen: true,
-  modalContent: "Hello World",
+  modalContent: "",
 };
 
 const Index = () => {
@@ -19,7 +41,11 @@ const Index = () => {
     e.preventDefault();
     console.log(name);
     if (name) {
+      const newItem = { id: new Date().getTime.toString(), name };
+      dispatch({ type: "ADD_ITEM", payload: newItem });
+      setName("");
     } else {
+      dispatch({ type: "NO_VALUE" });
     }
   };
 
@@ -42,8 +68,16 @@ const Index = () => {
       </form>
       {state.people.map((person) => {
         return (
-          <div key={person.id}>
+          <div key={person.id} className="item">
             <h2>{person.name}</h2>
+            <button
+              className="btn"
+              onClick={() =>
+                dispatch({ type: "REMOVE_ITEM", payload: person.id })
+              }
+            >
+              Remove
+            </button>
           </div>
         );
       })}
